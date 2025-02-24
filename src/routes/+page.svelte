@@ -3,7 +3,7 @@
 
   const containers = [
     {
-      name: 'Bonne Mamam jar',
+      name: 'Bonne Mamam 13oz jar',
       waterGrams: 240,
       diameter: 2.75,
       wicks: ['LX 16']
