@@ -1,16 +1,22 @@
 <script>
   const containers = [
     {
-      name: 'Bonne Mamam jam jar',
+      name: 'Bonne Mamam jar',
       waterGrams: 240,
       diameter: 2.75,
       wicks: ['LX 16']
     },
     {
-      name: 'OPAL HOUSE 15oz',
-      waterGrams: 290,
+      name: 'Opalhouse 15oz jar',
+      waterGrams: 490,
       diameter: 3.75,
       wicks: ['CD 2 (double wicked)']
+    },
+    {
+      name: 'Oui yogurt jar',
+      waterGrams: 128,
+      diameter: 2,
+      wicks: ['small wicks']
     }
   ];
 
@@ -34,7 +40,7 @@
       cureTime: '1-2 days'
     },
     {
-      name: 'Golden Brands 464 Soy Wax',
+      name: 'Golden 464 Soy Wax',
       specificGravity: 0.86,
       meltPoint: {
         F: '113°F',
@@ -49,43 +55,188 @@
         C: '85°C'
       },
       maxFrangranceLoad: '6 - 10%',
-      cureTime: '1-2 weeks for best hot throw'
+      cureTime: '1-2 weeks'
     }
   ];
+
+  let tempScale = $state('F');
 
   let containerType = $state(containers[0]);
   let waxType = $state(waxes[0]);
   let numberOfContainers = $state(1);
 
   let totalWaterGrams = $derived.by(() => containerType.waterGrams * numberOfContainers);
+  
+  let containerGroups = $state([]); 
+  
+  let groupsTotalWaterGrams = $derived.by(() => containerGroups.reduce((total, currentObject) => {
+    return total + (currentObject.type.waterGrams * currentObject.quantity);
+  }, 0));
+
+  let groupsTotalWaxGrams = $derived.by(() => groupsTotalWaterGrams * waxType.specificGravity);
+
+  let groupNamesList = $derived.by(() => containerGroups.map((containerGroup) => containerGroup.quantity + ' ' +   containerGroup.type.name + (containerGroup.quantity > 1 ? 's' : '')));
+
+  function joinWithAnd(arr) {
+  if (arr.length <= 1) {
+    return arr.join('');
+  }
+  const allButLast = arr.slice(0, -1).join(', ');
+  const last = arr.slice(-1);
+  return `${allButLast}, and ${last}`;
+}
 
 </script>
 
+{#snippet Notes(w)}
+  <div class="notes">
+    <!-- <p><strong>{w.name}</strong></p> -->
+    <p>Heat <strong>{w.name}</strong> to <strong>{w.addFragranceTemperature[tempScale]}</strong>, add fragrance (and liquid dye), remove from heat, and stir for 2 minutes.</p>
+    <p>Let the wax cool to <strong>{w.pourTemperature[tempScale]}</strong>, then pour into containers.</p>
+    <p>Allow candles to cure for {w.cureTime}.</p>
+</div>
+{/snippet}
 
-<h1>Wax Calculator</h1>
+{#snippet WaxInfo(w)}
+  <div class="notes">
+    <p><strong>{w.name}</strong></p>
+    <p>Add frangrance temperature: {w.addFragranceTemperature[tempScale]}</p>
+    <p>Pour temperature: {w.pourTemperature[tempScale]}</p>
+    <p>Melt point: {w.meltPoint[tempScale]}</p>
+    <p>Specific gravity: {w.specificGravity}</p>
+    <p>Max fragrance load: {w.maxFrangranceLoad}</p>
+    <p>Cure time: {w.cureTime}</p>
+  </div>
+{/snippet}
 
-<label for="containerType">Container Type: 
-  <select name="containerType" id="containerType">
-    {#each containers as container}
-      <option value={container.name}>{container.name}</option>
-    {/each}
-  </select>
-</label>
+<h1>How much wax will I need?</h1>
 
-<label for="numberOfContainers">How many containers?
-  <input type="number" name="numberOfContainers" id="numberOfContainers" bind:value={numberOfContainers}>
-</label>
+<form>
+    <div class="myrow">
+      <div class="mycol">
+        <label for="waxType">Wax type
+          <select bind:value={waxType} name="waxType" id="waxType">
+            {#each waxes as wax}
+            <option value={wax}>{wax.name}</option>
+            {/each}
+          </select>
+        </label>
+      </div>
+      <div class="mycol">
+        <label for="tempScale">Temp Scale
+          <select bind:value={tempScale} name="tempScale" id="tempScale">
+            <option value="F">Fahrenheit</option>
+            <option value="C">Celsius</option>
+          </select>
+        </label>
+      </div>
+    </div>
+    <hr>
+    <div class="myrow">
+      <div class="mycol">
+        <label for="containerType">Container type
+          <select bind:value={containerType} name="containerType" id="containerType">
+            {#each containers as container}
+            <option value={container}>{container.name}</option>
+            {/each}
+          </select>
+        </label>
+      </div>
+      <div class="mycol">
+        <label for="numberOfContainers">How many?
+          <input type="number" name="numberOfContainers" id="numberOfContainers" size="2" bind:value={numberOfContainers}>
+        </label>
+      </div>
+      <div class="mycol">
+        <button onclick={() => containerGroups.push({type:containerType, quantity:numberOfContainers})}>Add to groups</button>
+      </div>
+    </div>
+  
+</form>
+<p><strong>{totalWaterGrams * waxType.specificGravity} grams</strong> of <strong>{waxType.name}</strong> to fill <strong>{numberOfContainers} {containerType.name}{numberOfContainers > 1 ? 's' : ''}</strong>.</p>
 
-<label for="waxType">Wax Type:
-  <select name="waxType" id="waxType">
-    {#each waxes as wax}
-      <option value={wax.name}>{wax.name}</option>
-    {/each}
-  </select>
-</label>
+<section>
+  
+  <!-- {#each containerGroups as containerGroup}
+    <p>{containerGroup.quantity} {containerGroup.type.name}{containerGroup.quantity > 1 ? 's' : ''}</p>
+  {/each} -->
+
+  <!-- <p>{numberOfContainers} {containerType.name}{numberOfContainers > 1 ? 's' : ''}</p> -->
+
+  {#if containerGroups.length > 0}
+    <article>
+      <header>Groups of containers</header>
+    <table>
+      <thead>
+        <tr>
+          <th>Quantity</th>
+          <th>Container Type</th>
+          <th>Wax</th>
+          <th>remove</th>
+        </tr>
+      </thead>
+      <tbody>
+        {#each containerGroups as containerGroup, i (i)}
+          <tr>
+            <td>{containerGroup.quantity}</td>
+            <td>{containerGroup.type.name}</td>
+            <td>{(containerGroup.type.waterGrams * containerGroup.quantity) * waxType.specificGravity} grams</td>
+            <td><button class="remove-button" onclick={() => containerGroups.splice(i, 1)}>x</button></td>
+          </tr>
+        {/each}
+      </tbody>
+      <tfoot>
+        <tr>
+          <th scope="row">Total</th>
+          <th></th>
+          <th>{groupsTotalWaxGrams} grams</th>
+        </tr>
+      </tfoot>
+    </table>
+    </article>
+    <article class="highlight">
+      <p><strong>How much wax will I need?</strong></p>
+      <p class="result">You'll need to melt <strong>{groupsTotalWaxGrams} grams</strong> of <strong>{waxType.name}</strong> to fill {joinWithAnd(groupNamesList)}</p>
+    </article>
+  {:else}
+    <article>
+      <header>Add some containers</header>
+    </article>
+  {/if}
+  </section>
 
 
-<p>{numberOfContainers} {containerType.name}{numberOfContainers > 1 ? 's' : ''}</p>
-<p>{containerType.waterGrams} * {numberOfContainers} = {totalWaterGrams}g</p>
-<p>{waxType.name}</p>
-<p>{waxType.specificGravity} * {totalWaterGrams} = {totalWaterGrams * waxType.specificGravity}g of {waxType.name} to be melted</p>
+  
+<article>
+  <header>Instructions</header>
+  {@render Notes(waxType)}
+</article>
+<article>
+  <header>Info</header>
+  {@render WaxInfo(waxType)}
+</article>
+
+<style>
+  .myrow {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .result {
+    font-size: 1.5rem;
+  }
+
+  .highlight {
+    background-color: #fecc63;
+  }
+
+  .remove-button {
+    --pico-form-element-spacing-vertical: 0;
+    --pico-form-element-spacing-horizontal: 0.5rem;
+  }
+  /* .mycol {
+    display: flex;
+    flex-direction: column;
+  } */
+</style>
