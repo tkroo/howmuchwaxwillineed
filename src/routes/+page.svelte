@@ -1,4 +1,6 @@
 <script>
+	import Table from '$lib/components/Table.svelte';
+
   const containers = [
     {
       name: 'Bonne Mamam jar',
@@ -166,33 +168,10 @@
   {#if containerGroups.length > 0}
     <article>
       <header>Groups of containers</header>
-    <table>
-      <thead>
-        <tr>
-          <th>Quantity</th>
-          <th>Container Type</th>
-          <th>Wax</th>
-          <th>remove</th>
-        </tr>
-      </thead>
-      <tbody>
-        {#each containerGroups as containerGroup, i (i)}
-          <tr>
-            <td>{containerGroup.quantity}</td>
-            <td>{containerGroup.type.name}</td>
-            <td>{(containerGroup.type.waterGrams * containerGroup.quantity) * waxType.specificGravity} grams</td>
-            <td><button class="remove-button" onclick={() => containerGroups.splice(i, 1)}>x</button></td>
-          </tr>
-        {/each}
-      </tbody>
-      <tfoot>
-        <tr>
-          <th scope="row">Total</th>
-          <th></th>
-          <th>{groupsTotalWaxGrams} grams</th>
-        </tr>
-      </tfoot>
-    </table>
+      <!-- <hr>
+      <p>{JSON.stringify(containerGroups)}</p>
+      <hr> -->
+      <Table {containerGroups} {waxType} {groupsTotalWaxGrams} />
     </article>
     <article class="highlight">
       <p><strong>How much wax will I need?</strong></p>
