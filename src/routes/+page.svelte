@@ -15,7 +15,7 @@
       wicks: ['CD 2 (double wicked)']
     },
     {
-      name: 'Oui yogurt jar',
+      name: 'Oui yogurt 5oz jar',
       waterGrams: 128,
       diameter: 2,
       wicks: ['small wicks']
