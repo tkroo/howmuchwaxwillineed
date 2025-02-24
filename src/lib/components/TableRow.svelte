@@ -27,4 +27,7 @@
     width: fit-content;
     --pico-form-element-spacing-vertical: 0.2rem;
   }
+  select {
+    --pico-form-element-spacing-vertical: 0.2rem;
+  }
 </style>
