@@ -209,13 +209,4 @@
   .highlight {
     background-color: #fecc63;
   }
-
-  .remove-button {
-    --pico-form-element-spacing-vertical: 0;
-    --pico-form-element-spacing-horizontal: 0.5rem;
-  }
-  /* .mycol {
-    display: flex;
-    flex-direction: column;
-  } */
 </style>

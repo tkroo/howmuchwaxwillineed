@@ -12,7 +12,12 @@
 
 
 <style>
+  .remove-button, input[type='number'] {
+    --pico-form-element-spacing-vertical: 0rem;
+    --pico-form-element-spacing-horizontal: 0.5rem;
+  }
   input[type='number'] {
     width: fit-content;
+    --pico-form-element-spacing-vertical: 0.2rem;
   }
 </style>
