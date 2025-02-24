@@ -1,7 +1,7 @@
 <script lang="ts">
 	import TableRow from "./TableRow.svelte";
 
-  let { containerGroups=$bindable(), groupsTotalWaxGrams, waxType} = $props();
+  let { containerGroups=$bindable(), containers, groupsTotalWaxGrams, waxType} = $props();
 </script>
 
 <table>
@@ -15,7 +15,7 @@
   </thead>
   <tbody>
     {#each containerGroups as containerGroup, i (i)}
-      <TableRow {containerGroups} {containerGroup} sg={waxType.specificGravity} i={i} />
+      <TableRow {containers} {containerGroups} {containerGroup} sg={waxType.specificGravity} i={i} />
     {/each}
   </tbody>
   <tfoot>

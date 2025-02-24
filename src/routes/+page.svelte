@@ -170,8 +170,9 @@
       <header>Groups of containers</header>
       <!-- <hr>
       <p>{JSON.stringify(containerGroups)}</p>
+      <p>{JSON.stringify(containers)}</p>
       <hr> -->
-      <Table {containerGroups} {waxType} {groupsTotalWaxGrams} />
+      <Table {containers} {containerGroups} {waxType} {groupsTotalWaxGrams} />
     </article>
     <article class="highlight">
       <p><strong>How much wax will I need?</strong></p>
