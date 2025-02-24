@@ -150,7 +150,7 @@
         </label>
       </div>
       <div class="mycol">
-        <button onclick={() => containerGroups.push({type:containerType, quantity:numberOfContainers})}>Add to groups</button>
+        <button type="button" class="add-button" onclick={() => containerGroups.push({type:containerType, quantity:numberOfContainers})}>Add to groups</button>
       </div>
     </div>
   
@@ -158,13 +158,6 @@
 <p><strong>{totalWaterGrams * waxType.specificGravity} grams</strong> of <strong>{waxType.name}</strong> to fill <strong>{numberOfContainers} {containerType.name}{numberOfContainers > 1 ? 's' : ''}</strong>.</p>
 
 <section>
-  
-  <!-- {#each containerGroups as containerGroup}
-    <p>{containerGroup.quantity} {containerGroup.type.name}{containerGroup.quantity > 1 ? 's' : ''}</p>
-  {/each} -->
-
-  <!-- <p>{numberOfContainers} {containerType.name}{numberOfContainers > 1 ? 's' : ''}</p> -->
-
   {#if containerGroups.length > 0}
     <article>
       <header>Groups of containers</header>
@@ -180,7 +173,7 @@
     </article>
   {:else}
     <article>
-      <header>Add some containers</header>
+      <header>Add a group</header>
     </article>
   {/if}
   </section>
@@ -209,5 +202,9 @@
 
   .highlight {
     background-color: #fecc63;
+  }
+  .add-button {
+    margin-top: 0.5rem;
+    margin-bottom:0;
   }
 </style>
