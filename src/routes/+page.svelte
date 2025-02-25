@@ -133,8 +133,14 @@
         </label>
       </div>
     </div>
-    <hr>
-    <div class="myrow">
+    <!-- <hr> -->
+    <!-- <div class="myrow">
+      <div class="mycol">
+        <label for="numberOfContainers">How many?
+          <input type="number" name="numberOfContainers" id="numberOfContainers" size="2" bind:value={numberOfContainers}>
+        </label>
+      </div>
+
       <div class="mycol">
         <label for="containerType">Container type
           <select bind:value={containerType} name="containerType" id="containerType">
@@ -144,38 +150,26 @@
           </select>
         </label>
       </div>
-      <div class="mycol">
-        <label for="numberOfContainers">How many?
-          <input type="number" name="numberOfContainers" id="numberOfContainers" size="2" bind:value={numberOfContainers}>
-        </label>
-      </div>
+      
       <div class="mycol">
         <button type="button" class="add-button" onclick={() => containerGroups.push({type:containerType, quantity:numberOfContainers})}>Add to groups</button>
       </div>
-    </div>
+    </div> -->
   
 </form>
-<p><strong>{totalWaterGrams * waxType.specificGravity} grams</strong> of <strong>{waxType.name}</strong> to fill <strong>{numberOfContainers} {containerType.name}{numberOfContainers > 1 ? 's' : ''}</strong>.</p>
+<!-- <p><strong>{totalWaterGrams * waxType.specificGravity} grams</strong> of <strong>{waxType.name}</strong> to fill <strong>{numberOfContainers} {containerType.name}{numberOfContainers > 1 ? 's' : ''}</strong>.</p> -->
 
 <section>
-  {#if containerGroups.length > 0}
     <article>
-      <header>Groups of containers</header>
-      <!-- <hr>
-      <p>{JSON.stringify(containerGroups)}</p>
-      <p>{JSON.stringify(containers)}</p>
-      <hr> -->
-      <Table {containers} {containerGroups} {waxType} {groupsTotalWaxGrams} />
+      <header>Containers</header>
+      <Table {containers} {containerGroups} {waxType} {groupsTotalWaxGrams} {numberOfContainers} {containerType}/>
     </article>
+    {#if containerGroups.length>0}
     <article class="highlight">
       <p><strong>How much wax will I need?</strong></p>
       <p class="result">You'll need to melt <strong>{groupsTotalWaxGrams} grams</strong> of <strong>{waxType.name}</strong> to fill {joinWithAnd(groupNamesList)}</p>
     </article>
-  {:else}
-    <article>
-      <header>Add a group</header>
-    </article>
-  {/if}
+    {/if}
   </section>
 
 

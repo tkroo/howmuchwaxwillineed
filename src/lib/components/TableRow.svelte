@@ -14,7 +14,7 @@
     </select>
   </td>
   <td>{(containerGroup.type.waterGrams * containerGroup.quantity) * sg} grams</td>
-  <td><button class="remove-button" onclick={() => containerGroups.splice(i, 1)}>x</button></td>
+  <td style="text-align: center;"><button class="remove-button" onclick={() => containerGroups.splice(i, 1)}>x</button></td>
 </tr>
 
 
