@@ -1,3 +1,9 @@
 :root {
-  --pico-font-size: 94%;
+  --pico-font-size: 88%;
+}
+
+.page-wrapper {
+  margin: 0 auto;
+  /* max-width: 800px; */
+  background-color: pink;
 }

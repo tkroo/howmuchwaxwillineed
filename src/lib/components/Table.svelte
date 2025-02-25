@@ -1,14 +1,20 @@
 <script lang="ts">
+  import { nanoid } from 'nanoid';
+  import { containers } from '$lib/containersAndWaxes';
+  import { s, TotalWaxNeeded } from '$lib/sharedState.svelte';
 	import TableRow from "./TableRow.svelte";
-
-  let { containerGroups=$bindable(), containers, groupsTotalWaxGrams, waxType, numberOfContainers=$bindable(), containerType=$bindable() } = $props();
+  let numberOfContainers = $state(1);
+  let containerType = $state(containers[0]);
 </script>
 
 <table>
   <thead>
     <tr class="add-row">
       <td>
-        <input type="number" name="numberOfContainers" id="numberOfContainers" size="2" bind:value={numberOfContainers}>
+        <fieldset>
+          <label for="numberOfContainers"></label>
+          <input type="number" bind:value={numberOfContainers} name="numberOfContainers" id="numberOfContainers">
+        </fieldset>
       </td>
       <td>
         <select bind:value={containerType} name="containerType" id="containerType">
@@ -17,32 +23,31 @@
           {/each}
         </select>
       </td>
-      <td></td>
       <td>
-        <button type="button" class="add-button" onclick={() => containerGroups.push({type:containerType, quantity:numberOfContainers})}>Add new</button>
+        <button type="button" class="add-button" onclick={() => s.groups.push({type:containerType, quantity:numberOfContainers, id: nanoid()})}>Add new</button>
       </td>
     </tr>
     <tr>
       <th>Quantity</th>
       <th>Container Type</th>
       <th>Wax</th>
-      <th style="text-align: center;">action</th>
+      <th style="text-align: right;">action</th>
     </tr>
   </thead>
   <tbody>
     
     
-    {#each containerGroups as containerGroup, i (i)}
-      <TableRow {containers} {containerGroups} {containerGroup} sg={waxType.specificGravity} i={i} />
+    {#each s.groups as containerGroup, i (containerGroup.id)}
+      <TableRow {containerGroup} />
     {/each}
     
   </tbody>
-  {#if containerGroups.length > 0}
+  {#if s.groups.length > 0}
   <tfoot>
     <tr>
       <th scope="row">Total</th>
       <th></th>
-      <th>{groupsTotalWaxGrams} grams</th>
+      <th>{TotalWaxNeeded()} grams</th>
     </tr>
   </tfoot>
   {/if}
@@ -62,13 +67,10 @@
     --pico-form-element-spacing-horizontal: 0.5rem;
   }
   input[type='number'] {
-    width: fit-content;
+    width: 4rem;
     --pico-form-element-spacing-vertical: 0.2rem;
   }
   select {
     --pico-form-element-spacing-vertical: 0.2rem;
-  }
-  thead th {
-    /* background-color: #ccc; */
   }
 </style>

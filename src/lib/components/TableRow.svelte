@@ -1,5 +1,11 @@
 <script>
-  let { containers, containerGroups=$bindable(), containerGroup=$bindable(), sg, i } = $props();
+  import { containers } from '$lib/containersAndWaxes';
+  import { s } from '$lib/sharedState.svelte';
+  let { containerGroup=$bindable() } = $props();
+
+  function removeRow(id) {
+    s.groups = s.groups.filter(x => x.id != id)
+  }
 
 </script>
 
@@ -13,8 +19,8 @@
       {/each}
     </select>
   </td>
-  <td>{(containerGroup.type.waterGrams * containerGroup.quantity) * sg} grams</td>
-  <td style="text-align: center;"><button class="remove-button" onclick={() => containerGroups.splice(i, 1)}>x</button></td>
+  <td>{(containerGroup.type.waterGrams * containerGroup.quantity) * s.waxType.specificGravity} grams</td>
+  <td style="text-align: right;"><button title="remove" class="remove-button" onclick={() => {removeRow(containerGroup.id)}}>x</button></td>
 </tr>
 
 
@@ -24,7 +30,7 @@
     --pico-form-element-spacing-horizontal: 0.5rem;
   }
   input[type='number'] {
-    width: fit-content;
+    width: 4rem;
     --pico-form-element-spacing-vertical: 0.2rem;
   }
   select {

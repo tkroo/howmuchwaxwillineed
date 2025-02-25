@@ -1,105 +1,32 @@
-<script>
+<script lang="ts">
+  import { waxes } from '$lib/containersAndWaxes';
+  import { s, TotalWaxNeeded } from '$lib/sharedState.svelte';
 	import Table from '$lib/components/Table.svelte';
-
-  const containers = [
-    {
-      name: 'Bonne Mamam 13oz jar',
-      waterGrams: 240,
-      diameter: 2.75,
-      wicks: ['LX 16']
-    },
-    {
-      name: 'Opalhouse 15oz jar',
-      waterGrams: 490,
-      diameter: 3.75,
-      wicks: ['CD 2 (double wicked)']
-    },
-    {
-      name: 'Oui yogurt 5oz jar',
-      waterGrams: 128,
-      diameter: 2,
-      wicks: ['small wicks']
-    }
-  ];
-
-  const waxes = [
-    {
-      name: 'Coconut Apricot Wax',
-      specificGravity: 0.88,
-      meltPoint: {
-        F: '121-131°F',
-        C: '49.4-55.0°C'
-      },
-      pourTemperature: {
-        F: '175°F',
-        C: '79.4°C'
-      },
-      addFragranceTemperature: {
-        F: '190°F',
-        C: '87.8°C'
-      },
-      maxFrangranceLoad: 'up to 15%',
-      cureTime: '1-2 days'
-    },
-    {
-      name: 'Golden 464 Soy Wax',
-      specificGravity: 0.86,
-      meltPoint: {
-        F: '113°F',
-        C: '45.0°C'
-      },
-      pourTemperature: {
-        F: '135°F',
-        C: '57.2°C'
-      },
-      addFragranceTemperature: {
-        F: '185°F',
-        C: '85°C'
-      },
-      maxFrangranceLoad: '6 - 10%',
-      cureTime: '1-2 weeks'
-    }
-  ];
 
   let tempScale = $state('F');
 
-  let containerType = $state(containers[0]);
-  let waxType = $state(waxes[0]);
-  let numberOfContainers = $state(1);
+  let groupNamesList = $derived.by(() => s.groups.map((containerGroup) => ('<strong>'+containerGroup.quantity+'</strong> ' + ' ' + containerGroup.type.name + (containerGroup.quantity > 1 ? 's' : ''))));
 
-  let totalWaterGrams = $derived.by(() => containerType.waterGrams * numberOfContainers);
-  
-  let containerGroups = $state([]); 
-  
-  let groupsTotalWaterGrams = $derived.by(() => containerGroups.reduce((total, currentObject) => {
-    return total + (currentObject.type.waterGrams * currentObject.quantity);
-  }, 0));
-
-  let groupsTotalWaxGrams = $derived.by(() => groupsTotalWaterGrams * waxType.specificGravity);
-
-  let groupNamesList = $derived.by(() => containerGroups.map((containerGroup) => containerGroup.quantity + ' ' +   containerGroup.type.name + (containerGroup.quantity > 1 ? 's' : '')));
-
-  function joinWithAnd(arr) {
-  if (arr.length <= 1) {
-    return arr.join('');
+  function joinWithAnd(arr: string[]) {
+    if (arr.length <= 1) {
+      return arr.join('');
+    }
+    const allButLast = arr.slice(0, -1).join(', ');
+    const last = arr.slice(-1);
+    return `${allButLast}, and ${last}`;
   }
-  const allButLast = arr.slice(0, -1).join(', ');
-  const last = arr.slice(-1);
-  return `${allButLast}, and ${last}`;
-}
 
 </script>
 
-{#snippet Notes(w)}
+{#snippet Notes(w: any)}
   <div class="notes">
-    <!-- <p><strong>{w.name}</strong></p> -->
     <p>Heat <strong>{w.name}</strong> to <strong>{w.addFragranceTemperature[tempScale]}</strong>, add fragrance (and liquid dye), remove from heat, and stir for 2 minutes.</p>
     <p>Let the wax cool to <strong>{w.pourTemperature[tempScale]}</strong>, then pour into containers.</p>
     <p>Allow candles to cure for {w.cureTime}.</p>
 </div>
 {/snippet}
 
-{#snippet WaxInfo(w)}
+{#snippet WaxInfo(w: any)}
   <div class="notes">
     <p><strong>{w.name}</strong></p>
     <p>Add frangrance temperature: {w.addFragranceTemperature[tempScale]}</p>
@@ -110,14 +37,11 @@
     <p>Cure time: {w.cureTime}</p>
   </div>
 {/snippet}
-
-<h1>How much wax will I need?</h1>
-
 <form>
     <div class="myrow">
       <div class="mycol">
         <label for="waxType">Wax type
-          <select bind:value={waxType} name="waxType" id="waxType">
+          <select bind:value={s.waxType} name="waxType" id="waxType">
             {#each waxes as wax}
             <option value={wax}>{wax.name}</option>
             {/each}
@@ -132,56 +56,34 @@
           </select>
         </label>
       </div>
-    </div>
-    <!-- <hr> -->
-    <!-- <div class="myrow">
-      <div class="mycol">
-        <label for="numberOfContainers">How many?
-          <input type="number" name="numberOfContainers" id="numberOfContainers" size="2" bind:value={numberOfContainers}>
-        </label>
-      </div>
-
-      <div class="mycol">
-        <label for="containerType">Container type
-          <select bind:value={containerType} name="containerType" id="containerType">
-            {#each containers as container}
-            <option value={container}>{container.name}</option>
-            {/each}
-          </select>
-        </label>
-      </div>
-      
-      <div class="mycol">
-        <button type="button" class="add-button" onclick={() => containerGroups.push({type:containerType, quantity:numberOfContainers})}>Add to groups</button>
-      </div>
-    </div> -->
-  
+    </div>  
 </form>
-<!-- <p><strong>{totalWaterGrams * waxType.specificGravity} grams</strong> of <strong>{waxType.name}</strong> to fill <strong>{numberOfContainers} {containerType.name}{numberOfContainers > 1 ? 's' : ''}</strong>.</p> -->
 
 <section>
-    <article>
-      <header>Containers</header>
-      <Table {containers} {containerGroups} {waxType} {groupsTotalWaxGrams} {numberOfContainers} {containerType}/>
-    </article>
-    {#if containerGroups.length>0}
+  <article>
+    <header>Containers</header>
+    <Table />
+  </article>
+  {#if s.groups.length>0}
     <article class="highlight">
       <p><strong>How much wax will I need?</strong></p>
-      <p class="result">You'll need to melt <strong>{groupsTotalWaxGrams} grams</strong> of <strong>{waxType.name}</strong> to fill {joinWithAnd(groupNamesList)}</p>
+      <p class="result">You'll need <strong>{TotalWaxNeeded()} grams</strong> of <strong>{s.waxType.name}</strong> to fill<br>{@html joinWithAnd(groupNamesList)}.</p>
     </article>
-    {/if}
-  </section>
+  {/if}
+</section>
+
+<article>
+  <header>Instructions</header>
+  {@render Notes(s.waxType)}
+</article>
+
+<article>
+  <header>Info</header>
+  {@render WaxInfo(s.waxType)}
+</article>
 
 
   
-<article>
-  <header>Instructions</header>
-  {@render Notes(waxType)}
-</article>
-<article>
-  <header>Info</header>
-  {@render WaxInfo(waxType)}
-</article>
 
 <style>
   .myrow {
@@ -196,9 +98,5 @@
 
   .highlight {
     background-color: #fecc63;
-  }
-  .add-button {
-    margin-top: 0.5rem;
-    margin-bottom:0;
   }
 </style>
