@@ -1,4 +1,17 @@
-export const containers = [
+import type { Wax, Container, TempScale } from '$lib/types';
+
+export const TempScales: TempScale[] = [
+  {
+    name: 'Fahrenheit',
+    value: 'F'
+  },
+  {
+    name: 'Celsius',
+    value: 'C'
+  }
+]
+
+export const containers: Container[] = [
   {
     name: 'Bonne Mamam 13oz jar',
     waterGrams: 240,
@@ -19,7 +32,7 @@ export const containers = [
   }
 ];
 
-export const waxes = [
+export const waxes: Wax[] = [
   {
     name: 'Coconut Apricot Wax',
     specificGravity: 0.88,

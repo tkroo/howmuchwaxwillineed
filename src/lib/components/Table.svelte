@@ -1,6 +1,6 @@
 <script lang="ts">
   import { nanoid } from 'nanoid';
-  import { containers } from '$lib/containersAndWaxes';
+  import { containers } from '$lib/appConstants';
   import { s, TotalWaxNeeded } from '$lib/sharedState.svelte';
 	import TableRow from "./TableRow.svelte";
   let numberOfContainers = $state(1);
@@ -37,8 +37,8 @@
   <tbody>
     
     
-    {#each s.groups as containerGroup, i (containerGroup.id)}
-      <TableRow {containerGroup} />
+    {#each s.groups as row, i (row.id)}
+      <TableRow {row} />
     {/each}
     
   </tbody>
