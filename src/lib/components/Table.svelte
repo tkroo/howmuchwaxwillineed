@@ -4,7 +4,12 @@
   import { s, TotalWaxNeeded } from '$lib/sharedState.svelte';
 	import TableRow from "./TableRow.svelte";
   let numberOfContainers = $state(1);
+  let numberOfCustomContainers = $state(1);
   let containerType = $state(containers[0]);
+  let customWaterGrams = $state(0);
+  let customName = $state("custom");
+  let localContainers = $state(containers);
+
 </script>
 
 <table>
@@ -18,13 +23,38 @@
       </td>
       <td>
         <select bind:value={containerType} name="containerType" id="containerType">
-          {#each containers as container}
+          {#each localContainers as container}
           <option value={container}>{container.name}</option>
           {/each}
         </select>
       </td>
       <td>
         <button type="button" class="add-button" onclick={() => s.groups.push({type:containerType, quantity:numberOfContainers, id: nanoid()})}>Add new</button>
+      </td>
+    </tr>
+    <tr class="add-row">
+      <td>
+        <fieldset>
+          <label for="numberOfCustomContainers"></label>
+          <input type="number" bind:value={numberOfCustomContainers} name="numberOfCustomContainers" id="numberOfCustomContainers">
+        </fieldset>
+      </td>
+      <td>
+        <fieldset>
+          <label for="customName">Name</label>
+          <input type="text" bind:value={customName} name="customName" id="customName">
+        </fieldset>
+        <fieldset>
+          <label for="waterGrams">custom container (enter water weight in grams)</label>
+          <input type="number" bind:value={customWaterGrams} name="waterGrams" id="waterGrams" style="width: 6rem;">
+        </fieldset>
+      </td>
+      <td>
+        <button type="button" class="add-button" onclick={() => {
+          let name = `custom ${customWaterGrams}g`;
+          localContainers.push({name: customName, waterGrams: customWaterGrams, diameter: 0, wicks: ['?']})
+          s.groups.push({type:{name: name, waterGrams: customWaterGrams}, quantity:numberOfCustomContainers, id: nanoid()})
+        }}>Add custom</button>
       </td>
     </tr>
     <tr>
@@ -38,7 +68,7 @@
     
     
     {#each s.groups as row, i (row.id)}
-      <TableRow {row} />
+      <TableRow {row} containers={localContainers} />
     {/each}
     
   </tbody>

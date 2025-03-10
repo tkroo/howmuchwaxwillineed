@@ -4,7 +4,7 @@ import { waxes, TempScales } from '$lib/appConstants';
 export const s = $state({
   groups: [] as { type: any; quantity: number; id: string }[],
   waxType: waxes[0],
-  tempUnit: TempScales[0].value
+  tempUnit: TempScales[0].value,
 });
 
 
