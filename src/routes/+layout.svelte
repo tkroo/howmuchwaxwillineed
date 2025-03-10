@@ -3,7 +3,7 @@
 </script>
 
 <svelte:head>
-  <title>How much wax do I need?</title>
+  <title>How much wax will I need?</title>
 </svelte:head>
 
 <main>
