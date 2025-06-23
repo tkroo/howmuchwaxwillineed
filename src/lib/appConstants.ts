@@ -13,6 +13,18 @@ export const TempScales: TempScale[] = [
 
 export const containers: Container[] = [
   {
+    name: 'Small Apothecary Jar',
+    waterGrams: 300,
+    diameter: 3,
+    wicks: ['LX 16', 'LX 18']
+  },
+  {
+    name: 'Medium Straight Sided Jar',
+    waterGrams: 219,
+    diameter: 2.8,
+    wicks: ['LX 16']
+  },
+  {
     name: 'Bonne Mamam 13oz jar',
     waterGrams: 240,
     diameter: 2.75,
