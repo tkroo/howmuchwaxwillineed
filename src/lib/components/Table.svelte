@@ -29,7 +29,7 @@
         </select>
       </td>
       <td>
-        <button type="button" class="add-button" onclick={() => s.groups.push({type:containerType, quantity:numberOfContainers, id: nanoid()})}>Add new</button>
+        <button type="button" class="add-button" onclick={() => s.groups.push({type:containerType, quantity:numberOfContainers, id: nanoid()})}>Add</button>
       </td>
     </tr>
     <tr class="add-row">
@@ -45,7 +45,7 @@
           <input type="text" bind:value={customName} name="customName" id="customName">
         </fieldset>
         <fieldset>
-          <label for="waterGrams">custom container (enter water weight in grams)</label>
+          <label for="waterGrams">custom container (enter water weight in grams, not including container weight)</label>
           <input type="number" bind:value={customWaterGrams} name="waterGrams" id="waterGrams" style="width: 6rem;">
         </fieldset>
       </td>
@@ -54,7 +54,7 @@
           let name = `custom ${customWaterGrams}g`;
           localContainers.push({name: customName, waterGrams: customWaterGrams, diameter: 0, wicks: ['?']})
           s.groups.push({type:{name: name, waterGrams: customWaterGrams}, quantity:numberOfCustomContainers, id: nanoid()})
-        }}>Add custom</button>
+        }}>Add</button>
       </td>
     </tr>
     <tr>
