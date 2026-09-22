@@ -10,10 +10,7 @@
 	let { containers = [] }: Props = $props();
 
 	let numberOfContainers = $state(1);
-	let numberOfCustomContainers = $state(1);
 	let containerType = $state(containers[0]);
-	let customWaterGrams = $state(0);
-	let customName = $state('custom');
 	let localContainers = $state([...containers]);
 </script>
 
@@ -45,57 +42,6 @@
 					onclick={() =>
 						s.groups.push({ type: containerType, quantity: numberOfContainers, id: nanoid() })}
 					>Add</button
-				>
-			</td>
-		</tr>
-		<tr class="add-row">
-			<td>
-				<fieldset>
-					<label for="numberOfCustomContainers"></label>
-					<input
-						type="number"
-						bind:value={numberOfCustomContainers}
-						name="numberOfCustomContainers"
-						id="numberOfCustomContainers"
-					/>
-				</fieldset>
-			</td>
-			<td>
-				<fieldset>
-					<label for="customName">Name</label>
-					<input type="text" bind:value={customName} name="customName" id="customName" />
-				</fieldset>
-				<fieldset>
-					<label for="waterGrams"
-						>custom container (enter water weight in grams, not including container weight)</label
-					>
-					<input
-						type="number"
-						bind:value={customWaterGrams}
-						name="waterGrams"
-						id="waterGrams"
-						style="width: 6rem;"
-					/>
-				</fieldset>
-			</td>
-			<td>
-				<button
-					type="button"
-					class="add-button"
-					onclick={() => {
-						let name = `custom ${customWaterGrams}g`;
-						localContainers.push({
-							name: customName,
-							waterGrams: customWaterGrams,
-							diameter: 0,
-							wicks: ['?']
-						});
-						s.groups.push({
-							type: { name: name, waterGrams: customWaterGrams },
-							quantity: numberOfCustomContainers,
-							id: nanoid()
-						});
-					}}>Add</button
 				>
 			</td>
 		</tr>

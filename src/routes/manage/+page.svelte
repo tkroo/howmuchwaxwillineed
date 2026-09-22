@@ -234,7 +234,7 @@
 </script>
 
 <section>
-	<h1>Manage Inventory</h1>
+	<h1>Manage</h1>
 
 	{#if error}
 		<article style="background-color: #fee; border: 1px solid #f88;">
