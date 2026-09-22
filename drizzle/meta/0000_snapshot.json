@@ -1,0 +1,172 @@
+{
+  "id": "a54e846b-67fd-4516-9b8b-8ee03cdc2892",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.containers": {
+      "name": "containers",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "water_grams": {
+          "name": "water_grams",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "diameter": {
+          "name": "diameter",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "wicks": {
+          "name": "wicks",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'[]'::json"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'2026-09-22T23:33:46.497Z'"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "containers_name_unique": {
+          "name": "containers_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.waxes": {
+      "name": "waxes",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "add_fragrance_temperature_f": {
+          "name": "add_fragrance_temperature_f",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "add_fragrance_temperature_c": {
+          "name": "add_fragrance_temperature_c",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "pour_temperature_f": {
+          "name": "pour_temperature_f",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "pour_temperature_c": {
+          "name": "pour_temperature_c",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "melt_point_f": {
+          "name": "melt_point_f",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "melt_point_c": {
+          "name": "melt_point_c",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "specific_gravity": {
+          "name": "specific_gravity",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "max_fragrance_load": {
+          "name": "max_fragrance_load",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cure_time": {
+          "name": "cure_time",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'2026-09-22T23:33:46.499Z'"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "waxes_name_unique": {
+          "name": "waxes_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

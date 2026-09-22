@@ -1,10 +1,21 @@
 <script lang="ts">
-	import { waxes, TempScales } from '$lib/appConstants';
+	import { TempScales } from '$lib/appConstants';
 	import { s, TotalWaxNeeded } from '$lib/sharedState.svelte';
 	// import { WaxInfo, Notes } from '$lib/snippets.svelte';
 	import Table from '$lib/components/Table.svelte';
 	import TableOfWaxes from '$lib/components/TableOfWaxes.svelte';
 	import TableOfContainers from '$lib/components/TableOfContainers.svelte';
+	import type { PageData } from './$types';
+
+	let { data }: { data: PageData } = $props();
+
+	let waxes = $state(data.waxes);
+	let containers = $state(data.containers);
+
+	// Initialize shared state with database data
+	if (waxes.length > 0 && !s.waxType.id) {
+		s.waxType = waxes[0];
+	}
 
 	let groupNamesList = $derived.by(() =>
 		s.groups.map(
@@ -56,7 +67,7 @@
 
 	<article>
 		<header>Containers</header>
-		<Table />
+		<Table {containers} />
 	</article>
 
 	{#if s.groups.length > 0}
@@ -92,11 +103,11 @@
 	<h2>more info</h2>
 	<article>
 		<header>Waxes</header>
-		<TableOfWaxes />
+		<TableOfWaxes {waxes} />
 	</article>
 	<article>
 		<header>Containers</header>
-		<TableOfContainers />
+		<TableOfContainers {containers} />
 	</article>
 </section>
 

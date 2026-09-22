@@ -1,29 +1,43 @@
-<script>
-  import { containers } from '$lib/appConstants';
+<script lang="ts">
+	interface Props {
+		containers?: any[];
+	}
+
+	let { containers = [] }: Props = $props();
+
+	function getVisibleKeys(obj: any) {
+		return Object.keys(obj).filter((key) => key !== 'id' && key !== 'createdAt');
+	}
+
+	function getVisibleValues(obj: any) {
+		return Object.entries(obj)
+			.filter(([key]) => key !== 'id' && key !== 'createdAt')
+			.map(([, value]) => value);
+	}
 </script>
 
-<table>
-  <thead>
-    <tr>
-      {#each Object.keys(containers[0]) as key}
-        <th>{key}</th>
-      {/each}
-    </tr>
-  </thead>
-  <tbody>
-    {#each containers as wax}
-      <tr>
-        {#each Object.values(wax) as value}
-        <td>{value}</td>
-          <!-- {#if value instanceof Object}
-            <td>{value[s.tempUnit]}</td>
-          {:else}
-          {/if} -->
-        {/each}
-      </tr>
-    {/each}
-  </tbody>
-</table>
+{#if containers.length > 0}
+	<table>
+		<thead>
+			<tr>
+				{#each getVisibleKeys(containers[0]) as key}
+					<th>{key}</th>
+				{/each}
+			</tr>
+		</thead>
+		<tbody>
+			{#each containers as container}
+				<tr>
+					{#each getVisibleValues(container) as value}
+						<td>{value}</td>
+					{/each}
+				</tr>
+			{/each}
+		</tbody>
+	</table>
+{:else}
+	<p>No containers found</p>
+{/if}
 
 <!-- <table>
   <thead>
