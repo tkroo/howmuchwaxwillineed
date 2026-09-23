@@ -1,10 +1,14 @@
 import { json, type RequestHandler } from '@sveltejs/kit';
 import { db } from '$lib/db';
 import { waxesTable, type InsertWax } from '$lib/db/schema';
+import { requireAuth } from '$lib/server/auth';
 import { eq } from 'drizzle-orm';
 
-export const GET: RequestHandler = async () => {
+export const GET: RequestHandler = async (event) => {
 	try {
+		const unauthorized = await requireAuth(event);
+		if (unauthorized) return unauthorized;
+
 		const waxes = await db.query.waxesTable.findMany();
 		return json(waxes);
 	} catch (error) {
@@ -13,9 +17,12 @@ export const GET: RequestHandler = async () => {
 	}
 };
 
-export const POST: RequestHandler = async ({ request }) => {
+export const POST: RequestHandler = async (event) => {
 	try {
-		const data = await request.json();
+		const unauthorized = await requireAuth(event);
+		if (unauthorized) return unauthorized;
+
+		const data = await event.request.json();
 		const newWax: InsertWax = {
 			name: data.name,
 			addFragranceTemperatureF: data.addFragranceTemperatureF,

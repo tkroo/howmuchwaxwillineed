@@ -1,10 +1,14 @@
 import { json, type RequestHandler } from '@sveltejs/kit';
 import { db } from '$lib/db';
 import { settingsTable } from '$lib/db/schema';
+import { requireAuth } from '$lib/server/auth';
 import { eq } from 'drizzle-orm';
 
-export const GET: RequestHandler = async () => {
+export const GET: RequestHandler = async (event) => {
 	try {
+		const unauthorized = await requireAuth(event);
+		if (unauthorized) return unauthorized;
+
 		let settings = await db.query.settingsTable.findFirst();
 
 		// Initialize settings if they don't exist
@@ -20,9 +24,12 @@ export const GET: RequestHandler = async () => {
 	}
 };
 
-export const PUT: RequestHandler = async ({ request }) => {
+export const PUT: RequestHandler = async (event) => {
 	try {
-		const data = await request.json();
+		const unauthorized = await requireAuth(event);
+		if (unauthorized) return unauthorized;
+
+		const data = await event.request.json();
 
 		// Get or create settings
 		let settings = await db.query.settingsTable.findFirst();

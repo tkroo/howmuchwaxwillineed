@@ -2,9 +2,13 @@ import { db } from '$lib/db';
 import { containersTable, waxesTable } from '$lib/db/schema';
 import { containers, waxes } from '$lib/appConstants';
 import { json, type RequestHandler } from '@sveltejs/kit';
+import { requireAuth } from '$lib/server/auth';
 
-export const POST: RequestHandler = async () => {
+export const POST: RequestHandler = async (event) => {
 	try {
+		const unauthorized = await requireAuth(event);
+		if (unauthorized) return unauthorized;
+
 		console.log('Starting database seed...');
 
 		// Add containers

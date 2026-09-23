@@ -1,12 +1,16 @@
 import { json, type RequestHandler } from '@sveltejs/kit';
 import { db } from '$lib/db';
 import { waxesTable } from '$lib/db/schema';
+import { requireAuth } from '$lib/server/auth';
 import { eq } from 'drizzle-orm';
 
-export const PUT: RequestHandler = async ({ params, request }) => {
+export const PUT: RequestHandler = async (event) => {
 	try {
-		const id = parseInt(params.id, 10);
-		const data = await request.json();
+		const unauthorized = await requireAuth(event);
+		if (unauthorized) return unauthorized;
+
+		const id = parseInt(event.params.id, 10);
+		const data = await event.request.json();
 
 		const result = await db
 			.update(waxesTable)
@@ -36,9 +40,12 @@ export const PUT: RequestHandler = async ({ params, request }) => {
 	}
 };
 
-export const DELETE: RequestHandler = async ({ params }) => {
+export const DELETE: RequestHandler = async (event) => {
 	try {
-		const id = parseInt(params.id, 10);
+		const unauthorized = await requireAuth(event);
+		if (unauthorized) return unauthorized;
+
+		const id = parseInt(event.params.id, 10);
 
 		const result = await db.delete(waxesTable).where(eq(waxesTable.id, id)).returning();
 

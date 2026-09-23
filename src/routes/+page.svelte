@@ -11,13 +11,15 @@
 	let waxes = $state(data.waxes);
 	let containers = $state(data.containers);
 
-	// Initialize shared state with database data and defaults
-	if (waxes.length > 0 && !s.waxType.id) {
-		const defaultWax =
-			data.defaultWaxId && waxes.find((w) => w.id === data.defaultWaxId)
-				? waxes.find((w) => w.id === data.defaultWaxId)
-				: waxes[0];
-		s.waxType = defaultWax!;
+	// Keep selection tied to the current waxes array so the <select> has a matching option value.
+	if (waxes.length > 0) {
+		const selectedWax =
+			waxes.find((w) => w.id === data.defaultWaxId) ??
+			waxes.find((w) => w.id === s.waxType.id) ??
+			waxes.find((w) => w.name === s.waxType.name) ??
+			waxes[0];
+
+		s.waxType = selectedWax;
 	}
 
 	// Set default temperature unit
