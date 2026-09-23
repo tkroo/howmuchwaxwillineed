@@ -5,12 +5,17 @@
 
 	interface Props {
 		containers?: any[];
+		defaultContainerId?: number | null;
 	}
 
-	let { containers = [] }: Props = $props();
+	let { containers = [], defaultContainerId = null }: Props = $props();
 
 	let numberOfContainers = $state(1);
-	let containerType = $state(containers[0]);
+	let defaultContainer =
+		defaultContainerId && containers.find((c) => c.id === defaultContainerId)
+			? containers.find((c) => c.id === defaultContainerId)
+			: containers[0];
+	let containerType = $state(defaultContainer);
 	let localContainers = $state([...containers]);
 </script>
 

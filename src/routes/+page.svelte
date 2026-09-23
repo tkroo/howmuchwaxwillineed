@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { TempScales } from '$lib/appConstants';
 	import { s, TotalWaxNeeded } from '$lib/sharedState.svelte';
 	// import { WaxInfo, Notes } from '$lib/snippets.svelte';
 	import Table from '$lib/components/Table.svelte';
@@ -12,9 +11,22 @@
 	let waxes = $state(data.waxes);
 	let containers = $state(data.containers);
 
-	// Initialize shared state with database data
+	// Initialize shared state with database data and defaults
 	if (waxes.length > 0 && !s.waxType.id) {
-		s.waxType = waxes[0];
+		const defaultWax =
+			data.defaultWaxId && waxes.find((w) => w.id === data.defaultWaxId)
+				? waxes.find((w) => w.id === data.defaultWaxId)
+				: waxes[0];
+		s.waxType = defaultWax!;
+	}
+
+	// Set default temperature unit
+	if (data.defaultTempUnit) {
+		s.tempUnit = data.defaultTempUnit;
+	}
+
+	if (containers.length > 0) {
+		// This will be used by the Table component for default container selection
 	}
 
 	let groupNamesList = $derived.by(() =>
@@ -52,22 +64,12 @@
 					</select>
 				</label>
 			</div>
-			<div class="mycol">
-				<label for="tempScale"
-					>Temperature scale
-					<select bind:value={s.tempUnit} name="tempScale" id="tempScale">
-						{#each TempScales as tempScale}
-							<option value={tempScale.value}>{tempScale.name}</option>
-						{/each}
-					</select>
-				</label>
-			</div>
 		</div>
 	</form>
 
 	<article>
 		<header>Containers</header>
-		<Table {containers} />
+		<Table {containers} defaultContainerId={data.defaultContainerId} />
 	</article>
 
 	{#if s.groups.length > 0}

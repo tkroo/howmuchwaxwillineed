@@ -6,11 +6,19 @@
 
 	let containers = $state(data.containers);
 	let waxes = $state(data.waxes);
+	let settings = $state(data.settings);
 	let loading = $state(false);
 	let error = $state('');
 	let success = $state('');
 
-	let activeTab = $state<'containers' | 'waxes'>('containers');
+	let activeTab = $state<'containers' | 'waxes' | 'settings'>('containers');
+
+	// Settings state
+	let settingsForm = $state({
+		defaultContainerId: settings?.defaultContainerId || '',
+		defaultWaxId: settings?.defaultWaxId || '',
+		defaultTempUnit: settings?.defaultTempUnit || 'F'
+	});
 
 	// Container form state
 	let containerForm = $state({
@@ -211,6 +219,40 @@
 		editingWaxId = null;
 	}
 
+	async function handleSettingsSubmit() {
+		loading = true;
+		error = '';
+		success = '';
+
+		try {
+			const payload = {
+				defaultContainerId: settingsForm.defaultContainerId
+					? parseInt(settingsForm.defaultContainerId as string, 10)
+					: null,
+				defaultWaxId: settingsForm.defaultWaxId
+					? parseInt(settingsForm.defaultWaxId as string, 10)
+					: null,
+				defaultTempUnit: settingsForm.defaultTempUnit
+			};
+
+			const response = await fetch('/api/settings', {
+				method: 'PUT',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(payload)
+			});
+
+			if (!response.ok) throw new Error('Failed to save settings');
+
+			success = 'Settings saved successfully!';
+			await invalidateAll();
+			settings = data.settings;
+		} catch (err) {
+			error = err instanceof Error ? err.message : 'An error occurred';
+		} finally {
+			loading = false;
+		}
+	}
+
 	async function seedDatabase() {
 		loading = true;
 		error = '';
@@ -276,6 +318,12 @@
 			style={activeTab === 'waxes' ? 'font-weight: bold;' : ''}
 		>
 			Waxes
+		</button>
+		<button
+			onclick={() => (activeTab = 'settings')}
+			style={activeTab === 'settings' ? 'font-weight: bold;' : ''}
+		>
+			Preferences
 		</button>
 	</div>
 
@@ -380,7 +428,7 @@
 				</tbody>
 			</table>
 		</article>
-	{:else}
+	{:else if activeTab === 'waxes'}
 		<article>
 			<header>{editingWaxId ? 'Edit' : 'Add New'} Wax</header>
 			<form
@@ -550,6 +598,45 @@
 					</tbody>
 				</table>
 			</div>
+		</article>
+	{:else}
+		<article>
+			<header>Settings</header>
+			<form
+				onsubmit={(e) => {
+					e.preventDefault();
+					handleSettingsSubmit();
+				}}
+			>
+				<label>
+					Default Container
+					<select bind:value={settingsForm.defaultContainerId} disabled={loading}>
+						<option value="">None</option>
+						{#each containers as container}
+							<option value={container.id}>{container.name}</option>
+						{/each}
+					</select>
+				</label>
+				<label>
+					Default Wax Type
+					<select bind:value={settingsForm.defaultWaxId} disabled={loading}>
+						<option value="">None</option>
+						{#each waxes as wax}
+							<option value={wax.id}>{wax.name}</option>
+						{/each}
+					</select>
+				</label>
+				<label>
+					Temperature Scale
+					<select bind:value={settingsForm.defaultTempUnit} disabled={loading}>
+						<option value="F">Fahrenheit</option>
+						<option value="C">Celsius</option>
+					</select>
+				</label>
+				<button type="submit" disabled={loading}>
+					{loading ? 'Saving...' : 'Save Settings'}
+				</button>
+			</form>
 		</article>
 	{/if}
 </section>

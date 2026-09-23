@@ -24,7 +24,16 @@ export const waxesTable = pgTable('waxes', {
 	createdAt: varchar('created_at').notNull().default(new Date().toISOString())
 });
 
+export const settingsTable = pgTable('settings', {
+	id: serial('id').primaryKey(),
+	defaultContainerId: integer('default_container_id'),
+	defaultWaxId: integer('default_wax_id'),
+	defaultTempUnit: varchar('default_temp_unit', { length: 1 }).default('F')
+});
+
 export type Container = typeof containersTable.$inferSelect;
 export type InsertContainer = typeof containersTable.$inferInsert;
 export type Wax = typeof waxesTable.$inferSelect;
 export type InsertWax = typeof waxesTable.$inferInsert;
+export type Settings = typeof settingsTable.$inferSelect;
+export type InsertSettings = typeof settingsTable.$inferInsert;

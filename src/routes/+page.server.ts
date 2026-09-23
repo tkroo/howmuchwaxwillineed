@@ -1,9 +1,10 @@
 import { db } from '$lib/db';
-import type { Wax } from '$lib/types';
+import type { Wax, TempUnit } from '$lib/types';
 
 export async function load() {
 	const rawContainers = await db.query.containersTable.findMany();
 	const rawWaxes = await db.query.waxesTable.findMany();
+	const settings = await db.query.settingsTable.findFirst();
 
 	// Transform waxes to match the expected Wax type format
 	const waxes: Wax[] = rawWaxes.map((wax) => ({
@@ -28,6 +29,9 @@ export async function load() {
 
 	return {
 		containers: rawContainers,
-		waxes
+		waxes,
+		defaultContainerId: settings?.defaultContainerId,
+		defaultWaxId: settings?.defaultWaxId,
+		defaultTempUnit: (settings?.defaultTempUnit || 'F') as TempUnit
 	};
 }
